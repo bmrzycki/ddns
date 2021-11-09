@@ -18,8 +18,6 @@ def update(token, domains, ip='', timeout=10.0):
     url += f"&domains={quote(','.join(domains))}"
     if ip:
         url += f"&ip={quote(ip)}"
-    if VERBOSE > 1:
-        url += f"&verbose=true"
     if VERBOSE > 0:
         print(f"# url: {url}")
 
