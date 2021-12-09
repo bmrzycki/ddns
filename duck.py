@@ -12,13 +12,19 @@ from urllib.parse import quote
 VERBOSE = 0
 
 def update(token, domains, ip='', timeout=10.0):
-    domains = sorted(list(set(domains)))  # sort and remove duplicates
+    a = []
+    for d in domains:
+        if ',' in d:
+            return f"commas not allowed in domain name '{d}'"
+        a.append(quote(d, safe=''))
+    a = sorted(list(set(a)))  # remove duplicates and sort
     url = 'https://www.duckdns.org/update'
-    url += f"?token={quote(token)}"
-    url += f"&domains={quote(','.join(domains))}"
+    url += f"?token={quote(token, safe='')}"
+    url += f"&domains={','.join(a)}"
     if ip:
-        url += f"&ip={quote(ip)}"
+        url += f"&ip={quote(ip, safe='')}"
     if VERBOSE > 0:
+        url += "&verbose=true"
         print(f"# url: {url}")
 
     try:
@@ -30,13 +36,15 @@ def update(token, domains, ip='', timeout=10.0):
          return f"bad status={rsp.status} for url='{url}'"
 
     data = rsp.read()
+    if len(data) == 0:
+        return "no response from server"
+    data = data.decode('ascii')
     if VERBOSE > 0:
         print("# Response data:")
         pp(data)
-
-    if data == b'OK':
-        return ''
-    return f"failed token='{token}' domains={domains}"
+    if not data.startswith('OK'):
+        return f"failed token='{token}' domains={domains}"
+    return ''
 
 
 def main(args_raw):
