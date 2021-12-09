@@ -15,9 +15,9 @@ VERBOSE = 0
 
 def update(token, ip='', timeout=10.0):
     url = "http://sync.afraid.org/u/"
-    url += f"{quote(token)}/?content-type=json"
+    url += f"{quote(token, safe='')}/?content-type=json"
     if ip:
-        url += f"&myip={quote(ip)}"
+        url += f"&myip={quote(ip, safe='')}"
     if VERBOSE > 0:
         print(f"# url: {url}")
 
