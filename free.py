@@ -54,7 +54,7 @@ def main(args_raw):
         ' server-side auto-detection')
     p.add_argument(
         '-t', '--timeout',
-        default=10.0, type=float,
+        default=60.0, type=float,
         help='HTTP timeout value in seconds')
     p.add_argument(
         '-v', '--verbose',
